@@ -1,4 +1,4 @@
-name: CI
+name: Python application
 
 on:
   push:
@@ -10,7 +10,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+
     strategy:
       matrix:
         python-version: [3.8, 3.9]
@@ -23,22 +24,16 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Upgrade pip, wheel, setuptools, and install codecov
-      run: |
-        pip install -U pip wheel setuptools codecov
-
     - name: Install dependencies
       run: |
-        pip install -r reqs/requirements-latest.txt -r reqs/requirements-tests.txt
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install aiosqlite
 
-    - name: Run tests with coverage
-      run: |
-        coverage erase
-        coverage run --branch bin/trial scrapyd
-        coverage report
+    - name: Make test script executable
+      run: chmod +x tests/test.py
 
-    - name: Upload coverage to Codecov
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    - name: Run tests
       run: |
-        codecov
+        cd tests
+        ./test.py
