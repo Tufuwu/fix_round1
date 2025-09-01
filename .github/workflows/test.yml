@@ -1,4 +1,4 @@
-name: CI
+name: Python application
 
 on:
   push:
@@ -18,21 +18,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install coveralls
-
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run tests
-      run: make test
-
-    - name: Upload coverage to Coveralls
-      env:
-        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-      run: coveralls
+      run: python test/all_tests.py
