@@ -1,58 +1,61 @@
-"""
-Django-MongoEngine
-------------------
+from setuptools import setup
 
-Django support for MongoDB using MongoEngine.
-
-This is work-in-progress. Some things working, some don't. Fix what you need and make
-pull-request.
-
-Links
-`````
-
-* `development version
-  <https://github.com/MongoEngine/django-mongoengine>`_
-
-"""
-from setuptools import setup, find_packages
-import sys
 import os
 
+requirements_filename = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'requirements.txt')
 
-__version__ = '0.4.6'
-__description__ = 'Django support for MongoDB via MongoEngine'
-__license__ = 'BSD'
-__author__ = 'Ross Lawley'
-__email__ = 'ross.lawley@gmail.com'
+with open(requirements_filename) as fd:
+    install_requires = [i.strip() for i in fd.readlines()]
 
+requirements_dev_filename = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'requirements-dev.txt')
 
-sys.path.insert(0, os.path.dirname(__file__))
+with open(requirements_filename) as fd:
+    tests_require = [i.strip() for i in fd.readlines()]
 
+long_description_filename = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'README.md')
+
+with open(long_description_filename) as fd:
+    long_description = fd.read()
 
 setup(
-    name='django-mongoengine',
-    version=__version__,
-    url='https://github.com/mongoengine/django-mongoengine',
-    download_url='https://github.com/mongoengine/django-mongoengine/tarball/master',
-    license=__license__,
-    author=__author__,
-    author_email=__email__,
-    description=__description__,
-    long_description=__doc__,
-    zip_safe=False,
-    platforms='any',
-    install_requires=["django>2.2,<3.3", "mongoengine>=0.14"],
-    packages=find_packages(exclude=('doc', 'docs',)),
-    include_package_data=True,
+    name='fierce',
+    version='1.4.0',
+    description='A DNS reconnaissance tool for locating non-contiguous IP space.',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
+    url='https://github.com/mschwager/fierce',
+    packages=['fierce'],
+    package_dir={'fierce': 'fierce'},
+    license='GPLv3',
     classifiers=[
-        'Development Status :: 4 - Beta',
-        'Environment :: Web Environment',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        'Framework :: Django'
-    ]
+        'Environment :: Console',
+        'Intended Audience :: Information Technology',
+        'Intended Audience :: System Administrators',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: POSIX',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Topic :: Security',
+    ],
+    install_requires=install_requires,
+    tests_require=tests_require,
+    python_requires='>=3.0',
+    entry_points={
+        'console_scripts': [
+            'fierce = fierce.fierce:main',
+        ],
+    },
+    package_data={
+        'fierce': [
+            'lists/*.txt',
+        ],
+    },
 )

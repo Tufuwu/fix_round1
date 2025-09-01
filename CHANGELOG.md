@@ -1,29 +1,93 @@
-# Changelog
+# Change Log
+All notable changes to this project will be documented in this file.
+This project adheres to [Semantic Versioning](http://semver.org/).
+This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+## [Unreleased]
+### Added
+- Official Python 3.9 support
+- Official Python 3.10 support
 
-### [0.4.6](https://github.com/MongoEngine/django-mongoengine/compare/v0.4.5...v0.4.6) (2021-04-11)
+### Removed
+- Official Python 3.5 support
 
+## [1.4.0] - 2019-11-07
+### Added
+- Official Python 3.8 support
+- The --tcp flag to use TCP instead of UDP DNS queries
 
-### Bug Fixes
+### Removed
+- Official Python 3.4 support, it's EOL
 
-* **deps:** Move pytests dependency int dev-dependencies ([f7e37a7](https://github.com/MongoEngine/django-mongoengine/commit/f7e37a75e6612a4243ccc9abdb22f2dc72f53d9e))
+## [1.3.0] - 2019-05-15
+### Changed
+- Print out all A records for wildcard, not just first one
 
-### [0.4.5](https://github.com/MongoEngine/django-mongoengine/compare/v0.4.5-beta.4...v0.4.5) (2021-04-11)
+### Added
+- Filter out subdomains with an A record matching a wildcard A record
+- Official Python 3.7 support
 
+### Fixed
+- Prevent out of bounds error when expanding IPs near 0.0.0.0 or 255.255.255.255
 
-### Features
+## [1.2.2] - 2018-04-24
+### Changed
+- Python 3 is now a requirement when installing via setup.py (including pip)
+- The README markdown is now included in the package's long description
 
-* Remove six ([773c791](https://github.com/MongoEngine/django-mongoengine/commit/773c79169b08ccd71f958e1855a2c47b1c7ebb7e))
-* **drf-spectacular:** AutoSchema generator for drf-spectacular support. ([2ef9529](https://github.com/MongoEngine/django-mongoengine/commit/2ef9529e330d482957acf582a56ac7aeabe853c6))
-* Support Django 3.2
+## [1.2.1] - 2018-03-01
+### Changed
+- Nearby IP reverse queries are now multithread, which improves performance significantly
+- Updated development dependencies
+- Subdomain lists use package_data instead of data_files
 
-### Bug Fixes
+### Added
+- Gracefully handle users exiting the script with Ctrl+C
+- Gracefully handle incorrect file or IP range arguments
 
-* Add missing __init__.py ([bb11d36](https://github.com/MongoEngine/django-mongoengine/commit/bb11d36cf754bfd19bcff1e643fabd28c44f9e38))
+### Removed
+- Official Python 3.3 support, it's EOL
 
+## [1.2.0] - 2017-05-07
+### Added
+- Official Python 3.6 support
 
-### 2016-01-27
+### Fixed
+- Handling of subdomains specified that are actually FQDNs
+- Gracefully handling timeouts when querying nameservers
+- Gracefully handling timeouts when querying zone transfers
 
-* Support for django 1.9, minimum django version: 1.7
-* Moved `django_mongoengine.mongo_auth.MongoUser` to `django_mongoengine.mongo_auth.models.MongoUser`
+## [1.1.5] - 2017-01-08
+### Fixed
+- Fixed bug with CNAME records pointing to an A record without an associated IP
+- Fixed bug with connections being closed by remote peer
+
+## [1.1.4] - 2016-08-30
+### Fixed
+- Undo a PR that was breaking everything
+
+## [1.1.3] - 2016-08-30
+### Fixed
+- Fixed a subdomain concatenation bug
+
+## [1.1.2] - 2016-08-15
+### Changed
+- PyPI is absolutely ridiculous and needs a new version to upload the same package
+
+## [1.1.1] - 2016-08-11
+### Changed
+- Better error handling when making network connections
+- PEP8 formatting
+
+## [1.1.0] - 2016-05-16
+### Added
+- Intelligent subdomain file searching
+- PyPI classifiers
+
+### Changed
+- Using more modern setuptools instead of distutils
+- Small README improvements
+
+## [1.0.0] - 2016-05-08
+### Added
+- Initial release of Fierce
