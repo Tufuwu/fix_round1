@@ -1,4 +1,4 @@
-name: Python package
+name: CI
 
 on:
   push:
@@ -24,17 +24,13 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Upgrade pip
-      run: pip install --upgrade pip
-
     - name: Install dependencies
-      run: pip install -r requirements.txt
+      run: |
+        pip install black mypy
+        pip install --editable .[dev]
 
-    - name: Install package
-      run: python setup.py develop
+    - name: Run make check
+      run: make check
 
-    - name: Install test dependencies
-      run: pip install nose
-
-    - name: Run tests
-      run: nosetests
+    - name: Run make check-tests
+      run: make check-tests
