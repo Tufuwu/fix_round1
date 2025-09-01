@@ -1,4 +1,4 @@
-name: Django CI
+name: Python package
 
 on:
   push:
@@ -9,39 +9,11 @@ on:
       - main
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        python-version: [3.8, 3.8, 3.8]
-        django-version: ["Django>=3.0,<3.1", "Django>=2.2,<2.3"]
-        run-web-tests: [true, false]
-        use-custom-model: [true, false]
-        exclude:
-          - python-version: 3.8
-            django-version: "Django>=3.0,<3.1"
-            run-web-tests: false
-            use-custom-model: true
-          - python-version: 3.8
-            django-version: "Django>=3.0,<3.1"
-            run-web-tests: false
-            use-custom-model: false
-          - python-version: 3.8
-            django-version: "Django>=3.0,<3.1"
-            run-web-tests: true
-            use-custom-model: true
-          - python-version: 3.8
-            django-version: "Django>=3.0,<3.1"
-            run-web-tests: true
-            use-custom-model: false
-          - python-version: 3.8
-            django-version: "Django>=3.0,<3.1"
-            run-web-tests: true
-            use-custom-model: true
-          - python-version: 3.8
-            django-version: "Django>=3.0,<3.1"
-            run-web-tests: true
-            use-custom-model: false
+        python-version: [3.9, 3.8]
 
     steps:
     - uses: actions/checkout@v2
@@ -53,53 +25,20 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install codecov
-        grep -v "^django==" requirements.txt > /tmp/reqs.txt
-        pip install -r /tmp/reqs.txt
-        pip install "${{ matrix.django-version }}" -U
+        sudo apt-get update
+        sudo apt-get install -y graphviz
+        pip install .[test] codecov
 
-    - name: Make test script executable
-      run: chmod +x ./scripts/ci_runtests.sh
+    - name: Make run-tests.py executable
+      run: chmod +x ./run-tests.py
 
     - name: Run tests
-      run: ./scripts/ci_runtests.sh
+      run: ./run-tests.py
 
     - name: Upload coverage to Codecov
       if: success()
-      run: codecov
+      uses: codecov/codecov-action@v2
 
-  deploy:
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-22.04
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install codecov
-        grep -v "^django==" requirements.txt > /tmp/reqs.txt
-        pip install -r /tmp/reqs.txt
-        pip install "Django>=3.0,<3.1" -U
-
-    - name: Build and publish
-      env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      run: |
-        python setup.py sdist bdist_wheel
-        twine upload dist/*
-
-    - name: Notify Slack
-      uses: 8398a7/action-slack@v3
-      with:
-        status: ${{ job.status }}
-        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    - name: Cleanup pip cache
+      if: success()
+      run: rm -f $HOME/.cache/pip/log/debug.log
