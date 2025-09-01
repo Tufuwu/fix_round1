@@ -1,4 +1,4 @@
-name: Python application
+name: Python package
 
 on:
   push:
@@ -26,29 +26,15 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
+        pip install -r test-requirements.txt
         pip install -e .
-        pip install requests pytest-cov coveralls
-
-    - name: Install Docker Compose
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y docker-compose
-
-    - name: Start Docker services
-      run: |
-        docker-compose -f tests/config/docker-compose.yml up -d
-        sleep 120
-        ./tests/config/bootstrap
 
     - name: Run tests
-      run: |
-        py.test -v --cov=pygelf
-
-    - name: Stop Docker services
-      if: always()
-      run: docker-compose -f tests/config/docker-compose.yml down
+      run: nosetests -q --with-coverage --cover-package=pycron
 
     - name: Upload coverage to Coveralls
       if: success()
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: coveralls
