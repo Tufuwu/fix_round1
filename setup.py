@@ -1,31 +1,37 @@
-#!/usr/bin/env python
+from setuptools import find_packages
 
-from setuptools import setup
+import setuptools
+import os
+from io import open as io_open
 
-setup(
-        name='python3-discogs-client',
-        version='2.3.5',
-        description='Python API client for Discogs',
-        long_description='This is an active fork of the official "Discogs API client for Python", which was deprecated by discogs.com as of June 2020. We think it is a very useful Python module and decided to continue maintaining it. Please visit: https://github.com/joalla/discogs_client for more information.',
-        url='https://github.com/joalla/discogs_client',
-        author='joalla',
-        author_email='jt@peek-a-boo.at',
-        test_suite='discogs_client.tests',
-        classifiers=[
-            'Development Status :: 5 - Production/Stable',
-            'Environment :: Console',
-            'License :: OSI Approved :: BSD License',
-            'Natural Language :: English',
-            'Operating System :: OS Independent',
-            'Programming Language :: Python',
-            'Topic :: Communications',
-            'Topic :: Utilities',
-            ],
-        install_requires=[
-            'requests',
-            'oauthlib',
-            ],
-        packages=[
-            'discogs_client',
-            ],
-        )
+src_dir = os.path.abspath(os.path.dirname(__file__))
+
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+requirements = os.path.join(src_dir, 'requirements.txt')
+with io_open(requirements, mode='r') as fd:
+    install_requires = [i.strip().split('#', 1)[0].strip()
+                        for i in fd.read().strip().split('\n')]
+
+setuptools.setup(
+    name='jill',
+    version='0.1.0',
+    author="Johnny Chen",
+    author_email="johnnychen94@hotmail.com",
+    description="Julia Installer 4 Linux(and MacOS) - Light",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/johnnychen94/jill.py",
+    packages=['jill'] + ['jill.' + i for i in find_packages('jill')],
+    provides=['jill'],
+    install_requires=install_requires,
+    python_requires=">=3.6",
+    entry_points={'console_scripts': ['jill=jill.__main__:main'], },
+    include_package_data=True,
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],
+)

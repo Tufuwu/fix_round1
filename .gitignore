@@ -1,8 +1,9 @@
-*.pyc
-*.egg-info
-dist/
-.DS_Store
 .mypy_cache
 .coverage
-env/
-build/
+/build
+/dist
+.pytest_cache
+/*.egg-info
+julia_pkg
+__pycache__
+/*.log
